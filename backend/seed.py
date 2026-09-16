@@ -94,15 +94,26 @@ async def main() -> None:
         ("Poker Night, Low Stakes", "Chips are snacks and also chips.", "party", 4, "DLF Phase 2, Flat 402", False, 20),
     ]
 
-    for title, hook, kind, days, place, cfc, host_i in seeds:
+    # Two deliberately last-minute hangs so the "starting soon" strip has something live.
+    last_minute = [
+        ("Chai Run, 20 Minutes", "Walking out now. Shout if you want one.", "get-together", 1.5, "Campus Gate 2", True, 6),
+        ("Impromptu FIFA Tournament", "Four controllers, zero planning.", "party", 2.5, "Sushant Lok, Flat 12B", False, 14),
+    ]
+
+    for title, hook, kind, offset_val, place, cfc, host_i in seeds + last_minute:
         gid = _gid(title)
         host = people[host_i]
+        delta = (
+            timedelta(days=offset_val, hours=3)
+            if (title, hook, kind, offset_val, place, cfc, host_i) in seeds
+            else timedelta(hours=offset_val)
+        )
         doc = {
             "id": gid,
             "title": title,
             "hook": hook,
             "kind": kind,
-            "startsAt": now + timedelta(days=days, hours=3),
+            "startsAt": now + delta,
             "place": place,
             "hostId": host["id"],
             "hostName": host["name"],
@@ -127,7 +138,7 @@ async def main() -> None:
             )
 
     await ensure_indexes()
-    print(f"seeded {len(people)} people, {len(seeds)} gatherings")
+    print(f"seeded {len(people)} people, {len(seeds) + len(last_minute)} gatherings")
 
 
 if __name__ == "__main__":

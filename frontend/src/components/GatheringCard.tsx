@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Bus, MapPin, CalendarDays } from "lucide-react";
+import { Bus, MapPin, CalendarDays, Zap } from "lucide-react";
 import type { Gathering } from "@/lib/types";
-import { KIND_META, formatWhen, initials } from "@/lib/kinds";
+import { KIND_META, formatWhen, initials, isStartingSoon, countdown } from "@/lib/kinds";
 import { cn } from "@/lib/utils";
 
 export function AvatarStack({ names }: { names: string[] }) {
@@ -38,6 +38,7 @@ export default function GatheringCard({
 }) {
   const meta = KIND_META[gathering.kind];
   const names = gathering.going.map((a) => a.name);
+  const soon = isStartingSoon(gathering.startsAt);
 
   return (
     <Link
@@ -46,9 +47,19 @@ export default function GatheringCard({
       className={cn(
         "animate-pop-in block rounded-3xl border-2 p-5 shadow-[3px_4px_0_0_rgba(30,32,34,0.12)] transition-transform duration-200 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
         meta.card,
+        soon && "border-foreground shadow-[4px_5px_0_0_rgba(240,90,40,0.55)]",
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
+        {soon && (
+          <span
+            data-testid={`starting-soon-${gathering.id}`}
+            className="rounded-full border-2 border-foreground bg-primary px-2.5 py-1 font-mono text-[11px] font-bold text-primary-foreground"
+          >
+            <Zap className="mr-1 inline size-3" />
+            {countdown(gathering.startsAt)}
+          </span>
+        )}
         <span
           className={cn(
             "rounded-full border px-2.5 py-1 font-mono text-[11px] font-semibold",

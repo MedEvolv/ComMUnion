@@ -30,6 +30,7 @@ export default function CreateGathering() {
     mutationFn: (body: GatheringCreate) => apiPost<Gathering>("/gatherings", body),
     onSuccess: (g) => {
       void qc.invalidateQueries({ queryKey: ["gatherings"] });
+      void qc.invalidateQueries({ queryKey: ["plans"] });
       toast.success("Posted to the board 🎉");
       navigate(`/gatherings/${g.id}`);
     },

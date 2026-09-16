@@ -5,8 +5,8 @@ import { ArrowLeft, Bus, CalendarDays, MapPin } from "lucide-react";
 import Shell from "@/components/Shell";
 import { apiDelete, apiGet, apiPost, ApiError } from "@/lib/api";
 import { usePersona } from "@/lib/persona";
-import { KIND_META, formatWhen, initials } from "@/lib/kinds";
-import type { DeleteResult, Gathering } from "@/lib/types";
+import { KIND_META, formatWhen, initials, prettyTag } from "@/lib/kinds";
+import type { DeleteResult, Gathering, Profile } from "@/lib/types";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -36,7 +36,16 @@ export default function GatheringDetail() {
   const invalidate = () => {
     void qc.invalidateQueries({ queryKey: ["gathering", id] });
     void qc.invalidateQueries({ queryKey: ["gatherings"] });
+    void qc.invalidateQueries({ queryKey: ["plans"] });
   };
+
+  const myProfile = useQuery({
+    queryKey: ["profile", persona?.id ?? ""],
+    queryFn: () => apiGet<Profile>(`/profiles/${persona?.id ?? ""}`),
+    enabled: !!persona,
+  });
+  const myInterests = new Set(myProfile.data?.interests ?? []);
+  const shared = (interests: string[]) => interests.filter((t) => myInterests.has(t));
 
   const join = useMutation({
     mutationFn: () =>
@@ -218,16 +227,26 @@ export default function GatheringDetail() {
               </p>
             ) : (
               <ul className="mt-4 grid gap-3 sm:grid-cols-2" data-testid="attendee-list">
-                {g.going.map((a) => (
+                {[...g.going]
+                  .sort((a, b) => {
+                    const diff = shared(b.interests).length - shared(a.interests).length;
+                    return diff !== 0 ? diff : a.name.localeCompare(b.name);
+                  })
+                  .map((a) => {
+                  const common = persona && a.personId !== persona.id ? shared(a.interests) : [];
+                  return (
                   <li
                     key={a.personId}
                     data-testid={`attendee-${a.personId}`}
-                    className="flex items-center gap-3 rounded-2xl border-2 border-border bg-card p-3"
+                    className={cn(
+                      "flex items-start gap-3 rounded-2xl border-2 bg-card p-3",
+                      common.length > 0 ? "border-primary/60" : "border-border",
+                    )}
                   >
                     <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-foreground bg-secondary font-mono text-xs font-semibold">
                       {initials(a.name)}
                     </span>
-                    <span className="min-w-0">
+                    <span className="min-w-0 flex-1">
                       <span className="block truncate font-heading font-bold">
                         {a.name}
                         {a.personId === g.hostId && (
@@ -249,9 +268,28 @@ export default function GatheringDetail() {
                           </span>
                         )}
                       </span>
+                      {common.length > 0 && (
+                        <span
+                          data-testid={`shared-interests-${a.personId}`}
+                          className="mt-2 flex flex-wrap items-center gap-1"
+                        >
+                          <span className="font-mono text-[10px] font-semibold uppercase text-primary">
+                            you both like
+                          </span>
+                          {common.map((t) => (
+                            <span
+                              key={t}
+                              className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 font-mono text-[10px] font-medium text-[#7C2D12]"
+                            >
+                              #{prettyTag(t)}
+                            </span>
+                          ))}
+                        </span>
+                      )}
                     </span>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </section>

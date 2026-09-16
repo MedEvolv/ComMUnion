@@ -54,6 +54,7 @@ class Attendee(BaseModel):
     batch: str
     housing: str
     comingFromCollege: bool
+    interests: List[str] = []
 
 
 class GatheringCreate(BaseModel):
@@ -78,6 +79,11 @@ class Gathering(BaseModel):
     comingFromCollege: bool = False
     createdAt: datetime = Field(default_factory=_now)
     going: List[Attendee] = []
+
+
+class PersonPlans(BaseModel):
+    hosting: List["Gathering"] = []
+    joined: List["Gathering"] = []
 
 
 class RSVPRequest(BaseModel):

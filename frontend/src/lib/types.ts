@@ -36,6 +36,7 @@ export interface Attendee {
   batch: string;
   housing: string;
   comingFromCollege: boolean;
+  interests: string[];
 }
 
 export interface Gathering {
@@ -75,4 +76,9 @@ export interface DeleteResult {
 export interface Vocab {
   interests: string[];
   lookingFor: string[];
+}
+
+export interface PersonPlans {
+  hosting: Gathering[];
+  joined: Gathering[];
 }

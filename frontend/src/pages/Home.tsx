@@ -7,7 +7,7 @@ import GatheringCard from "@/components/GatheringCard";
 import EmptyState, { LoadingCards } from "@/components/EmptyState";
 import { apiGet } from "@/lib/api";
 import { usePersona } from "@/lib/persona";
-import { KINDS, KIND_META } from "@/lib/kinds";
+import { KINDS, KIND_META, isStartingSoon } from "@/lib/kinds";
 import type { Gathering, Kind } from "@/lib/types";
 import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,8 @@ export default function Home() {
   });
 
   const gatherings = useMemo(() => (isError ? [] : (data ?? [])), [data, isError]);
+  const soon = useMemo(() => gatherings.filter((g) => isStartingSoon(g.startsAt)), [gatherings]);
+  const later = useMemo(() => gatherings.filter((g) => !isStartingSoon(g.startsAt)), [gatherings]);
 
   return (
     <Shell>
@@ -133,14 +135,42 @@ export default function Home() {
             ctaTo="/create"
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2" data-testid="gathering-list">
-            {gatherings.map((g) => (
-              <GatheringCard
-                key={g.id}
-                gathering={g}
-                youAreGoing={!!persona && g.going.some((a) => a.personId === persona.id)}
-              />
-            ))}
+          <div className="space-y-8">
+            {soon.length > 0 && (
+              <section
+                data-testid="last-minute-board"
+                className="animate-pop-in rounded-[2rem] border-2 border-foreground bg-foreground p-5 text-background shadow-[5px_6px_0_0_rgba(240,90,40,0.6)] sm:p-6"
+              >
+                <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h2 className="font-heading text-2xl font-black tracking-tight">
+                    ⚡ Last-minute board
+                  </h2>
+                  <p className="text-sm text-background/70">
+                    Kicking off in the next three hours. Drop everything.
+                  </p>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {soon.map((g) => (
+                    <GatheringCard
+                      key={g.id}
+                      gathering={g}
+                      youAreGoing={!!persona && g.going.some((a) => a.personId === persona.id)}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+            {later.length > 0 && (
+              <div className="grid gap-5 sm:grid-cols-2" data-testid="gathering-list">
+                {later.map((g) => (
+                  <GatheringCard
+                    key={g.id}
+                    gathering={g}
+                    youAreGoing={!!persona && g.going.some((a) => a.personId === persona.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

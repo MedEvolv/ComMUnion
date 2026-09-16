@@ -9,6 +9,7 @@ from models.core import (
     DeleteResult,
     Gathering,
     GatheringCreate,
+    PersonPlans,
     RSVP,
     RSVPRequest,
 )
@@ -24,6 +25,10 @@ async def _hydrate(doc: dict) -> Gathering:
     rsvps = await db.rsvps.find({"gatheringId": doc["id"]}).to_list(500)
     ids = [r["personId"] for r in rsvps]
     people = {p["id"]: p for p in await db.people.find({"id": {"$in": ids}}).to_list(500)}
+    profiles = {
+        p["personId"]: p
+        for p in await db.profiles.find({"personId": {"$in": ids}}).to_list(500)
+    }
     going = [
         Attendee(
             personId=r["personId"],
@@ -31,6 +36,7 @@ async def _hydrate(doc: dict) -> Gathering:
             batch=people[r["personId"]]["batch"],
             housing=people[r["personId"]]["housing"],
             comingFromCollege=bool(r.get("comingFromCollege")),
+            interests=list(profiles.get(r["personId"], {}).get("interests", [])),
         )
         for r in rsvps
         if r["personId"] in people
@@ -89,6 +95,24 @@ async def get_gathering(gathering_id: str):
     if not doc:
         raise HTTPException(status_code=404, detail="Gathering not found")
     return await _hydrate(doc)
+
+
+@router.get("/people/{person_id}/gatherings", response_model=PersonPlans)
+async def person_plans(person_id: str):
+    if not await db.people.find_one({"id": person_id}):
+        raise HTTPException(status_code=404, detail="Person not found")
+    hosting_docs = await db.gatherings.find({"hostId": person_id}).sort("startsAt", 1).to_list(200)
+    rsvps = await db.rsvps.find({"personId": person_id}).to_list(500)
+    joined_ids = [r["gatheringId"] for r in rsvps]
+    joined_docs = (
+        await db.gatherings.find({"id": {"$in": joined_ids}, "hostId": {"$ne": person_id}})
+        .sort("startsAt", 1)
+        .to_list(200)
+    )
+    return PersonPlans(
+        hosting=[await _hydrate(d) for d in hosting_docs],
+        joined=[await _hydrate(d) for d in joined_docs],
+    )
 
 
 @router.post("/gatherings/{gathering_id}/rsvp", response_model=Gathering)

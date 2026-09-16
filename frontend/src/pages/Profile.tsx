@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Shell from "@/components/Shell";
+import GatheringCard from "@/components/GatheringCard";
+import EmptyState, { LoadingCards } from "@/components/EmptyState";
 import { apiGet, apiPost, apiPut, ApiError } from "@/lib/api";
 import { usePersona } from "@/lib/persona";
 import { initials, prettyTag } from "@/lib/kinds";
-import type { IngestResult, Profile as ProfileT, Vocab } from "@/lib/types";
+import type { IngestResult, PersonPlans, Profile as ProfileT, Vocab } from "@/lib/types";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 function errText(e: unknown, fallback: string) {
@@ -34,6 +37,11 @@ export default function Profile() {
   const profileQ = useQuery({
     queryKey: ["profile", pid],
     queryFn: () => apiGet<ProfileT>(`/profiles/${pid}`),
+    enabled: !!pid,
+  });
+  const plansQ = useQuery({
+    queryKey: ["plans", pid],
+    queryFn: () => apiGet<PersonPlans>(`/people/${pid}/gatherings`),
     enabled: !!pid,
   });
 
@@ -113,7 +121,85 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <Tabs defaultValue="hub" className="mt-8">
+        <TabsList variant="line" data-testid="profile-tabs">
+          <TabsTrigger value="hub" data-testid="tab-hub" className="font-semibold">
+            My hub
+          </TabsTrigger>
+          <TabsTrigger value="plans" data-testid="tab-plans" className="font-semibold">
+            My plans
+            {plansQ.data && (
+              <span className="ml-1.5 rounded-full bg-foreground px-1.5 py-0.5 font-mono text-[10px] text-background">
+                {plansQ.data.hosting.length + plansQ.data.joined.length}
+              </span>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="plans" className="mt-6" data-testid="plans-panel">
+          {plansQ.isLoading ? (
+            <LoadingCards count={2} />
+          ) : plansQ.isError ? (
+            <p data-testid="plans-error" className="text-sm text-destructive">
+              Couldn&rsquo;t load your plans right now.
+            </p>
+          ) : (
+            <div className="space-y-8">
+              <section>
+                <h2 className="font-heading text-2xl font-black tracking-tight">
+                  Hosting{" "}
+                  <span className="text-muted-foreground" data-testid="hosting-count">
+                    ({plansQ.data?.hosting.length ?? 0})
+                  </span>
+                </h2>
+                {(plansQ.data?.hosting.length ?? 0) === 0 ? (
+                  <div className="mt-3">
+                    <EmptyState
+                      testid="hosting-empty"
+                      title="You haven't thrown anything yet"
+                      body="Post a hang and it'll show up here with everyone who joins."
+                      ctaLabel="Throw a gathering"
+                      ctaTo="/create"
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-4 grid gap-5 sm:grid-cols-2" data-testid="hosting-list">
+                    {plansQ.data?.hosting.map((g) => (
+                      <GatheringCard key={g.id} gathering={g} youAreGoing={false} />
+                    ))}
+                  </div>
+                )}
+              </section>
+              <section>
+                <h2 className="font-heading text-2xl font-black tracking-tight">
+                  Joined{" "}
+                  <span className="text-muted-foreground" data-testid="joined-count">
+                    ({plansQ.data?.joined.length ?? 0})
+                  </span>
+                </h2>
+                {(plansQ.data?.joined.length ?? 0) === 0 ? (
+                  <div className="mt-3">
+                    <EmptyState
+                      testid="joined-empty"
+                      title="Nothing joined yet"
+                      body="Find a hang on the board and tap 'I'm in'."
+                      ctaLabel="Browse the board"
+                      ctaTo="/"
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-4 grid gap-5 sm:grid-cols-2" data-testid="joined-list">
+                    {plansQ.data?.joined.map((g) => (
+                      <GatheringCard key={g.id} gathering={g} youAreGoing />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="hub" className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <section className="space-y-6 rounded-3xl border-2 border-border bg-card p-6">
           <div className="space-y-2">
             <Label htmlFor="bio">Bio</Label>
@@ -221,7 +307,8 @@ export default function Profile() {
             </p>
           )}
         </aside>
-      </div>
+        </TabsContent>
+      </Tabs>
     </Shell>
   );
 }

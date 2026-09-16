@@ -1,0 +1,212 @@
+{
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#FFFDF7",
+        "on_bg": "#1E2022",
+        "on_bg_muted": "#636B74",
+        "roles": {
+          "link": "#F05A28",
+          "error": "#D9381E",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#1E2022",
+        "on_bg_muted": "#636B74",
+        "roles": {
+          "link": "#F05A28",
+          "error": "#D9381E",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "party_card",
+        "kind": "solid",
+        "bg": "#FFF4EC",
+        "on_bg": "#431407",
+        "on_bg_muted": "#7C2D12",
+        "roles": {
+          "link": "#EA580C",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "event_card",
+        "kind": "solid",
+        "bg": "#F0F9FF",
+        "on_bg": "#0C4A6E",
+        "on_bg_muted": "#0369A1",
+        "roles": {
+          "link": "#0284C7",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "gettogether_card",
+        "kind": "solid",
+        "bg": "#F0FDF4",
+        "on_bg": "#14532D",
+        "on_bg_muted": "#15803D",
+        "roles": {
+          "link": "#16A34A",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      },
+      {
+        "name": "coming_from_college_pill",
+        "kind": "solid",
+        "bg": "#FEF3C7",
+        "on_bg": "#78350F",
+        "on_bg_muted": "#92400E"
+      },
+      {
+        "name": "batch_pill",
+        "kind": "solid",
+        "bg": "#F3E8FF",
+        "on_bg": "#581C87",
+        "on_bg_muted": "#6B21A8"
+      },
+      {
+        "name": "demo_user_active_bar",
+        "kind": "solid",
+        "bg": "#1E2022",
+        "on_bg": "#FFFDF7",
+        "on_bg_muted": "#D1D5DB",
+        "roles": {
+          "link": "#FDBA74",
+          "error": "#FCA5A5",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#1E2022",
+        "on_bg": "#FFFDF7",
+        "on_bg_muted": "#D1D5DB",
+        "roles": {
+          "link": "#FDBA74",
+          "error": "#FCA5A5",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "hero_banner",
+        "kind": "solid",
+        "bg": "#FFEDE1",
+        "on_bg": "#431407",
+        "on_bg_muted": "#7C2D12",
+        "roles": {
+          "link": "#EA580C",
+          "error": "#B91C1C",
+          "success": "#15803D"
+        }
+      }
+    ],
+    "accent": "#F05A28",
+    "on_accent": "#FFFFFF",
+    "secondary_accent": "#0284C7",
+    "on_secondary_accent": "#FFFFFF",
+    "border_color": "#E5E7EB",
+    "border_strong": "#1E2022"
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Outfit Variable",
+      "body": "DM Sans Variable",
+      "mono": "IBM Plex Mono"
+    },
+    "font_import": "@import \"@fontsource-variable/outfit\";\n@import \"@fontsource-variable/dm-sans\";\n@import \"@fontsource/ibm-plex-mono\";",
+    "scale_px": {
+      "display": 52,
+      "h1": 40,
+      "h2": 32,
+      "h3": 24,
+      "body": 16,
+      "caption": 14
+    },
+    "rules": {
+      "headlines": "font-heading font-black tracking-tight text-stone-900 leading-tight",
+      "subheadings": "font-heading font-bold tracking-tight text-stone-800",
+      "body": "font-sans font-normal text-base text-stone-700 leading-relaxed",
+      "labels": "font-sans font-semibold text-xs tracking-wider uppercase text-stone-500",
+      "tags": "font-mono font-medium text-xs px-2.5 py-1 rounded-full border border-stone-300"
+    }
+  },
+  "entry_surfaces": {
+    "/": "Bubbly campus party board hero with quick demo persona switch at top, filter ribbon (Kind: All, Party, Event, Hangout + Upcoming Only), and asymmetric bento feed of live gatherings with who's going avatars and coming-from-college badges",
+    "/demo-sign-in": "Vibrant classmate roster selector with search, batch filter tabs (UG '24-'26, PG '24-'26), student avatar cards showing housing and tags, and instant single-click persona impersonation",
+    "/gatherings/:id": "High-energy event detail board featuring host info, college transit badge, full RSVP attendee grid with 'coming from campus' status indicators, and one-tap Join / Leave RSVP toggle",
+    "/create": "Sticker-style gathering creator form with kind selector (Party 🎉, Event 🎟️, Get-Together ☕), date-time picker, college transit switch, catchy hook input, and real-time live sticker card preview",
+    "/profile": "Interactive student personality hub with bio, multi-select campus interest pills, looking-for tags, smart 'Paste-to-Tag' NLP text ingest analyzer, and personal hosted/joined gatherings tab"
+  },
+  "motion": {
+    "hover_lift": "transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-md active:translate-y-0",
+    "badge_pulse": "animate-pulse",
+    "stagger_fade": "motion.div variants with staggered opacity and slight y-axis slide-in",
+    "button_press": "active:scale-95 transition-transform duration-100",
+    "reduced_motion": "respects prefers-reduced-motion: disable translate offsets and fall back to clean opacity fade"
+  },
+  "accessibility": {
+    "contrast_standard": "All text tokens strictly meet WCAG AA (minimum 4.5:1 for body and muted, 3:1 for large display).",
+    "focus_states": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2",
+    "data_testids": "MANDATORY on all buttons, links, inputs, badges, filter tabs, gathering cards, and demo person selection cards.",
+    "aria_labels": "Clear aria-label attributes on icon buttons (persona switch, filter chips, delete/leave actions, copy hooks)."
+  },
+  "image_urls": [
+    {
+      "category": "hero_students",
+      "url": "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBmcmllbmRzJTIwZ2F0aGVyaW5nfGVufDB8fHx8MTc4OTUzOTEwMXww&ixlib=rb-4.1.0&q=85",
+      "description": "Diverse group of college friends hanging out together outdoor on campus steps",
+      "placement": "Home page hero accent illustration card / Community banner"
+    },
+    {
+      "category": "campus_party_crowd",
+      "url": "https://images.unsplash.com/photo-1569617084133-26942bb441f2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwyfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBmcmllbmRzJTIwZ2F0aGVyaW5nfGVufDB8fHx8MTc4OTUzOTEwMXww&ixlib=rb-4.1.0&q=85",
+      "description": "Five college classmates laughing and walking together outdoors",
+      "placement": "Event detail header placeholder / gathering ambiance backdrop"
+    },
+    {
+      "category": "indoor_hangout",
+      "url": "https://images.pexels.com/photos/8571868/pexels-photo-8571868.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Young students chilling indoors in comfortable lounge seating",
+      "placement": "Get-together category badge / Empty state friendly graphic"
+    }
+  ],
+  "component_structure": {
+    "shell": "/app/frontend/src/components/Navbar.tsx",
+    "persona_bar": "/app/frontend/src/components/ActivePersonaBar.tsx",
+    "gathering_card": "/app/frontend/src/components/GatheringCard.tsx",
+    "filter_bar": "/app/frontend/src/components/FilterBar.tsx",
+    "paste_to_tag_box": "/app/frontend/src/components/PasteToTagBox.tsx",
+    "attendee_list": "/app/frontend/src/components/AttendeeList.tsx",
+    "empty_state": "/app/frontend/src/components/EmptyState.tsx",
+    "ui_components": "/app/frontend/src/components/ui/"
+  },
+  "instructions_to_main_agent": [
+    "Style Identity: 'Campus Party Board meets Belong' — Warm cream background (#FFFDF7), punchy tangerine orange CTA (#F05A28), chunky playful rounded corners (rounded-2xl and rounded-3xl), subtle 1px-2px solid dark borders for tactile neo-sticker feel, vibrant badges for gathering kinds (🎉 Party = Peach/Warm, 🎟️ Event = Sky Blue, ☕ Get-Together = Mint Green).",
+    "NO ESG DASHBOARD: Do not make this look like an enterprise SaaS or analytics table. Use sticker badges, colorful attendee avatar stacks, bold typography ('Outfit Variable' + 'DM Sans Variable'), and friendly punchy copy.",
+    "Demo Sign In Roster: Pre-seed 30 named Masters' Union classmates spanning 3 UG batches (UG '24, UG '25, UG '26) and 3 PG batches (PG Cohort '24, PG Cohort '25, PG Cohort '26) with distinct housing (Cyber City Highs, DLF Phase 2, Golf Course Rd, Campus Residences, Nirvana Country, Sushant Lok), bios, and tagged interests.",
+    "Active Persona Persistence: Store current active demo user in localStorage and React state so switching user seamlessly updates RSVP status, 'You're Going' badges, and profile views without needing auth tokens or campus mail.",
+    "Coming From College Toggle: This is a core differentiator. Highlight when a gathering has hosts or attendees 'Coming straight from Campus' with a bright amber pill ('🚌 Coming from College') to help students coordinate informal transit.",
+    "Paste-to-Tag Ingest Feature on Profile: Provide a text input box where a student can paste raw bio / WhatsApp intro / LinkedIn summary / notes, click 'Extract Tags', and automatically parse interests (e.g. #fintech, #boardgames, #techno, #padel, #poker, #startups) and looking-for tags.",
+    "States Handling: Implement rich UI states for Empty (no gatherings matching filters with a 'Throw a Gathering' button), Loading (playful pulsing sticker cards), and Error (toast alerts using Sonner with quick retry).",
+    "Data Test IDs: Add `data-testid` attributes to all key interactive elements (e.g., `data-testid='demo-user-card-...'`, `data-testid='filter-party'`, `data-testid='rsvp-join-button'`, `data-testid='create-gathering-submit'`)."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Avoid AI slop: Don't make generic centered layouts or sterile blue cards. Maintain high contrast with warm friendly campus vibes.",
+    "Use 2-3x generous spacing between sections (gap-6, p-6, p-8).",
+    "Ensure all text meets WCAG AA 4.5:1 contrast against its immediate surface container.",
+    "Do NOT apply universal `transition: all`. Use specific `transition-colors`, `transition-transform`, `transition-opacity`.",
+    "Use Sonner for toasts (`sonner.tsx` at `frontend/src/components/ui/sonner.tsx`)."
+  ]
+}

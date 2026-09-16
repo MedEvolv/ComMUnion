@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Bus, MapPin, CalendarDays, Zap } from "lucide-react";
+import { Bus, MapPin, CalendarDays, Zap, DoorOpen, Tag } from "lucide-react";
 import type { Gathering } from "@/lib/types";
-import { KIND_META, formatWhen, initials, isStartingSoon, countdown } from "@/lib/kinds";
+import { KIND_META, formatWhen, initials, isStartingSoon, countdown, capLabel } from "@/lib/kinds";
 import { cn } from "@/lib/utils";
 
 export function AvatarStack({ names }: { names: string[] }) {
@@ -29,6 +29,37 @@ export function AvatarStack({ names }: { names: string[] }) {
   );
 }
 
+export function StatusPill({ g, testid }: { g: Gathering; testid?: string }) {
+  if (g.status === "cancelled") {
+    return (
+      <span
+        data-testid={testid}
+        className="rounded-full border-2 border-foreground/40 bg-muted px-2.5 py-1 font-mono text-[11px] font-bold text-muted-foreground line-through"
+      >
+        Taken down
+      </span>
+    );
+  }
+  if (g.status === "full") {
+    return (
+      <span
+        data-testid={testid}
+        className="rounded-full border-2 border-foreground bg-foreground px-2.5 py-1 font-mono text-[11px] font-bold text-background"
+      >
+        Full · {capLabel(g)}
+      </span>
+    );
+  }
+  return (
+    <span
+      data-testid={testid}
+      className="rounded-full border border-current/25 bg-white/60 px-2.5 py-1 font-mono text-[11px] font-semibold"
+    >
+      {capLabel(g)} going
+    </span>
+  );
+}
+
 export default function GatheringCard({
   gathering,
   youAreGoing,
@@ -39,6 +70,7 @@ export default function GatheringCard({
   const meta = KIND_META[gathering.kind];
   const names = gathering.going.map((a) => a.name);
   const soon = isStartingSoon(gathering.startsAt);
+  const cancelled = gathering.status === "cancelled";
 
   return (
     <Link
@@ -47,11 +79,12 @@ export default function GatheringCard({
       className={cn(
         "animate-pop-in block rounded-3xl border-2 p-5 shadow-[3px_4px_0_0_rgba(30,32,34,0.12)] transition-transform duration-200 ease-out hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
         meta.card,
-        soon && "border-foreground shadow-[4px_5px_0_0_rgba(240,90,40,0.55)]",
+        soon && !cancelled && "border-foreground shadow-[4px_5px_0_0_rgba(240,90,40,0.55)]",
+        cancelled && "opacity-60 saturate-50",
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
-        {soon && (
+        {soon && !cancelled && (
           <span
             data-testid={`starting-soon-${gathering.id}`}
             className="rounded-full border-2 border-foreground bg-primary px-2.5 py-1 font-mono text-[11px] font-bold text-primary-foreground"
@@ -69,6 +102,7 @@ export default function GatheringCard({
         >
           {meta.emoji} {meta.label}
         </span>
+        <StatusPill g={gathering} testid={`gathering-status-${gathering.id}`} />
         {gathering.comingFromCollege && (
           <span className="rounded-full border border-[#92400E]/25 bg-[#FEF3C7] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#78350F]">
             <Bus className="mr-1 inline size-3" />
@@ -93,7 +127,9 @@ export default function GatheringCard({
       <dl className="mt-4 grid gap-1.5 text-sm font-medium">
         <div className="flex items-center gap-2">
           <CalendarDays className="size-4 shrink-0 opacity-70" />
-          <dd data-testid={`gathering-when-${gathering.id}`}>{formatWhen(gathering.startsAt)}</dd>
+          <dd data-testid={`gathering-when-${gathering.id}`}>
+            {gathering.kind === "lunch" ? "Today's lunch slot · TBD from campus" : formatWhen(gathering.startsAt)}
+          </dd>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="size-4 shrink-0 opacity-70" />
@@ -101,12 +137,35 @@ export default function GatheringCard({
         </div>
       </dl>
 
+      {(gathering.roomLabel || gathering.hostClubLabel) && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {gathering.roomLabel && (
+            <span
+              data-testid={`gathering-room-${gathering.id}`}
+              className="rounded-full border border-current/20 bg-white/70 px-2 py-0.5 font-mono text-[10px] font-semibold"
+            >
+              <DoorOpen className="mr-1 inline size-3" />
+              {gathering.roomLabel}
+            </span>
+          )}
+          {gathering.hostClubLabel && (
+            <span
+              data-testid={`gathering-club-${gathering.id}`}
+              className="rounded-full border border-current/20 bg-white/70 px-2 py-0.5 font-mono text-[10px] font-semibold"
+            >
+              <Tag className="mr-1 inline size-3" />
+              {gathering.hostClubLabel}
+            </span>
+          )}
+        </div>
+      )}
+
       <div className="mt-4 flex items-center gap-3 border-t border-current/10 pt-3">
         <AvatarStack names={names} />
         <p className="text-xs font-semibold" data-testid={`gathering-going-count-${gathering.id}`}>
           {names.length === 0
             ? "Nobody yet — be first"
-            : `${names.length} going · hosted by ${gathering.hostName}`}
+            : `${names.length} going · ${gathering.hostName} (${gathering.hostBatch})`}
         </p>
       </div>
     </Link>

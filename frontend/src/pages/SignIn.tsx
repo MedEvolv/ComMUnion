@@ -117,8 +117,13 @@ export default function SignIn() {
                   <span className="block truncate font-heading text-base font-bold">{p.name}</span>
                   <span className="mt-1 flex flex-wrap gap-1">
                     <span className="rounded-full bg-[#F3E8FF] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#581C87]">
-                      {p.batch}
+                      {p.programme} · {p.batch}
                     </span>
+                    {p.cohort && (
+                      <span className="rounded-full bg-[#DBEEFB] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#0369A1]">
+                        {p.cohort}
+                      </span>
+                    )}
                     <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
                       {p.housing}
                     </span>

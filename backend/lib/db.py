@@ -28,6 +28,11 @@ INDEXES: dict[str, list[IndexModel]] = {
         IndexModel([("id", ASCENDING)], name="id", unique=True),
         IndexModel([("kind", ASCENDING), ("startsAt", ASCENDING)], name="kind_starts"),
         IndexModel([("startsAt", ASCENDING)], name="starts_asc"),
+        IndexModel([("status", ASCENDING), ("startsAt", ASCENDING)], name="status_starts"),
+        IndexModel([("hostBatch", ASCENDING)], name="host_batch"),
+        IndexModel([("hostProgramme", ASCENDING)], name="host_programme"),
+        IndexModel([("roomId", ASCENDING), ("slotDate", ASCENDING)], name="room_slot"),
+        IndexModel([("kind", ASCENDING), ("slotDate", ASCENDING)], name="kind_slot"),
     ],
     "rsvps": [
         IndexModel(

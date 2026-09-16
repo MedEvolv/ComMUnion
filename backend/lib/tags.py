@@ -29,16 +29,13 @@ INTEREST_VOCAB: Dict[str, List[str]] = {
 }
 
 LOOKING_FOR_VOCAB: Dict[str, List[str]] = {
-    "cofounder": ["cofounder", "co-founder", "co founder"],
-    "gym-buddy": ["gym buddy", "gym partner", "workout partner"],
-    "study-group": ["study group", "study buddy", "case prep", "exam prep"],
-    "jam-partners": ["jam partner", "bandmates", "band mates"],
-    "startup-team": ["hackathon", "project team", "startup team", "build together"],
-    "internship-leads": ["internship", "intern role", "placement", "referral"],
-    "new-friends": ["new friends", "make friends", "meet people", "new people"],
-    "sports-squad": ["sports squad", "team to play", "pickup game", "someone to play"],
-    "party-crew": ["party crew", "night out", "clubbing buddies", "plus one"],
-    "mentor": ["mentor", "mentorship", "guidance"],
+    "house-party": ["house party", "houseparty", "flat party", "terrace party", "party"],
+    "quiet-dinner": ["quiet dinner", "dinner", "small dinner", "supper"],
+    "study-adjacent-hang": ["study", "study hang", "case prep", "library", "cowork", "co-work"],
+    "club-night": ["club night", "clubbing", "night out", "techno night", "dj night"],
+    "sports": ["sports", "padel", "football", "cricket", "pickup game", "match", "run club"],
+    "coffee": ["coffee", "chai", "cafe", "espresso"],
+    "group-lunch": ["lunch", "group lunch", "lunch slot", "canteen", "mess"],
 }
 
 ALL_INTERESTS = sorted(INTEREST_VOCAB.keys())
